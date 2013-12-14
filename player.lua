@@ -46,7 +46,7 @@ function Player:update(dt)
         local dy = mousey - self.y
         local ang = math.atan2(dy, dx)
 
-        game:newBullet(self.x, self.y, ang, 500, 2, "player")
+        game:newBullet(self.x, self.y, ang, 500, 2, "player", { 30, 25, 20 })
 
         self.nextFire = game.time + self.fireDelay
 

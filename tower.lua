@@ -1,10 +1,10 @@
 Tower = class("Tower")
 
 Tower.types =
-{ --   name            cost  range  delay  speed  damage    base color         barrel color
-    { "Cannon",        100,   150,    0.9,   400,    1.9,  {  40,  41,  42 }, {   5,   5,   5 },  },
-    { "Machine gun",   500,   220,    0.4,   650,    1.5,  {  70,  70,  70 }, { 180,  90,  10 },  },
-    { "Plasma gun",    800,   300,    0.5,   500,    2.1,  {  10, 120, 160 }, {  60, 210, 200 },  },
+{ --   name            cost  range  delay  speed  damage    base color         barrel color       bullet color
+    { "Cannon",        100,   150,    0.9,   400,    1.9,  {  40,  41,  42 }, {   5,   5,   5 }, {   5,   5,   5 } },
+    { "Machine gun",   500,   220,    0.4,   650,    1.5,  {  70,  70,  70 }, { 180,  90,  10 }, { 160, 180,  20 } },
+    { "Plasma gun",    800,   300,    0.5,   500,    2.1,  {  10, 120, 160 }, {  60, 210, 200 }, {  60, 210, 200 } },
 }
 
 Tower.NAME = 1
@@ -15,6 +15,7 @@ Tower.SPEED = 5
 Tower.DAMAGE = 6
 Tower.BASE_COLOR = 7
 Tower.BARREL_COLOR = 8
+Tower.BULLET_COLOR = 9
 
 function Tower:initialize(t_index, type, x, y)
 
@@ -85,7 +86,7 @@ function Tower:update(dt)
 
         if self.nextFire < game.time then
 
-            game:newBullet(self.cx, self.cy, self.ang, 500, self.damage, "tower")
+            game:newBullet(self.cx, self.cy, self.ang, 500, self.damage, "tower", Tower.types[self.type][Tower.BULLET_COLOR])
 
             self.nextFire = game.time + self.delay
 

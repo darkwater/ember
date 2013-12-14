@@ -17,8 +17,8 @@ function Enemy:initialize(e_index, path, speed)
     self.nextTarget = 2
     self.speed = speed
 
-    self.maxHealth = 10
-    self.health    = 10
+    self.maxHealth = 18
+    self.health    = 18
     self.size      = 12
 
     self.prize = speed / 5

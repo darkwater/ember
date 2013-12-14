@@ -1,6 +1,6 @@
 Bullet = class("Bullet")
 
-function Bullet:initialize(b_index, x, y, ang, speed, damage, origin)
+function Bullet:initialize(b_index, x, y, ang, speed, damage, origin, color)
 
     self.b_index = b_index
 
@@ -10,6 +10,7 @@ function Bullet:initialize(b_index, x, y, ang, speed, damage, origin)
     self.speed  = speed
     self.damage = damage
     self.origin = origin
+    self.color  = color
 
 end
 
@@ -49,7 +50,7 @@ end
 
 function Bullet:draw()
 
-    love.graphics.setColor(30, 25, 20)
+    love.graphics.setColor(self.color)
     love.graphics.circle("fill", self.x, self.y, 4, 5)
 
 end
