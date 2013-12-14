@@ -39,6 +39,7 @@ function Bullet:update(dt)
             v:damage(self.damage)
 
             self:destroy()
+            break
 
         end
 

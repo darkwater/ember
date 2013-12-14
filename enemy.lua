@@ -21,6 +21,8 @@ function Enemy:initialize(e_index, path, speed)
     self.health    = 10
     self.size      = 12
 
+    self.prize = speed / 5
+
 end
 
 function Enemy:update(dt)
@@ -67,5 +69,6 @@ end
 function Enemy:destroy()
 
     game:removeEnemy(self.e_index)
+    game.money = game.money + self.prize
 
 end

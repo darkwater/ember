@@ -11,12 +11,17 @@ function Player:initialize()
     self.ang   = 0
     self.speed = 150
 
-    self.nextFire  = 0
+    self.nextFire  = 0.5
     self.fireDelay = 0.1
+
+    self.buildRange = 150
 
 end
 
 function Player:update(dt)
+
+    local window_width, window_height = love.window.getDimensions()
+    local mousex, mousey = love.mouse.getPosition()
 
     local dirx = (love.keyboard.isDown("a") and -1 or 0) + (love.keyboard.isDown("d") and 1 or 0)
     local diry = (love.keyboard.isDown("w") and -1 or 0) + (love.keyboard.isDown("s") and 1 or 0)
@@ -35,10 +40,10 @@ function Player:update(dt)
 
     end
 
-    if love.mouse.isDown("l") and self.nextFire < game.time then
+    if love.mouse.isDown("l") and mousey < window_height - 120 and self.nextFire < game.time then
 
-        local dx = love.mouse.getX() - self.x
-        local dy = love.mouse.getY() - self.y
+        local dx = mousex - self.x
+        local dy = mousey - self.y
         local ang = math.atan2(dy, dx)
 
         game:newBullet(self.x, self.y, ang, 500, 2, "player")

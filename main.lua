@@ -13,6 +13,7 @@ function love.load()
     require("map")
     require("tile")
     require("bullet")
+    require("tower")
     require("enemy")
     require("player")
     require("dashboard")
@@ -25,6 +26,7 @@ function love.load()
     ember.currentScreen = "mainmenu"
 
     ember.fonts = {}
+    ember.fonts[14] = love.graphics.newFont("fonts/DroidSans.ttf", 14)
     ember.fonts[18] = love.graphics.newFont("fonts/DroidSans.ttf", 18)
     ember.fonts[24] = love.graphics.newFont("fonts/DroidSans.ttf", 24)
     ember.fonts[48] = love.graphics.newFont("fonts/DroidSans.ttf", 48)

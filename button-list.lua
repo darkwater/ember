@@ -42,6 +42,8 @@ function ButtonList:draw()
 
     local mousex, mousey = love.mouse.getPosition()
 
+    love.graphics.setFont(self.font)
+
     local y = self.y
     for i,v in ipairs(self.buttons) do
 

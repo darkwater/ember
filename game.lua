@@ -8,10 +8,13 @@ function Game:initialize()
 
     self.enemies = {}
     self.bullets = {}
+    self.towers  = {}
 
     self.spawnRate = 1
 
     self.time = 0
+
+    self.money = 200
 
 end
 
@@ -28,11 +31,15 @@ function Game:update(dt)
 
     if math.floor(self.time / self.spawnRate) > math.floor((self.time - dt) / self.spawnRate) then
 
-        self:newEnemy(self.map.paths[1], math.random(80, 120))
+        self:newEnemy(self.map.paths[math.random(1, #self.map.paths)], math.random(80, 120))
 
     end
 
     for k,v in pairs(self.enemies) do
+        v:update(dt)
+    end
+
+    for k,v in pairs(self.towers) do
         v:update(dt)
     end
 
@@ -53,6 +60,10 @@ function Game:draw()
         self.player:draw()
 
         for k,v in pairs(self.enemies) do
+            v:draw()
+        end
+
+        for k,v in pairs(self.towers) do
             v:draw()
         end
 
@@ -112,5 +123,19 @@ end
 function Game:removeEnemy(i)
 
     self.enemies[i] = nil
+
+end
+
+function Game:newTower(...)
+
+    local i = #self.towers + 1
+    local tower = Tower:new(i, ...)
+    self.towers[i] = tower
+
+end
+
+function Game:removeTower(i)
+
+    self.towers[i] = nil
 
 end
