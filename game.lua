@@ -40,8 +40,16 @@ function Game:mousePressed(x, y, button)
 
 end
 
-function Game:loadMap(name)
+function Game:loadMap(obj)
 
-    self.map:loadFile("maps/" .. name .. ".map")
+    if type(obj) == "string" then
+
+        self.map:loadFile("maps/" .. name .. ".map")
+
+    else
+
+        self.map:loadData(obj)
+
+    end
 
 end

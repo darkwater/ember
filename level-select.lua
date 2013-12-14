@@ -7,10 +7,15 @@ function LevelSelect:initialize()
     self.hoveringPlay = false
     self.hoveringBack = false
 
-    self.levels =
-    {
-        { "Intro",    "intro",   [[ A nice beginners map to get you started. ]] }
-    }
+    self.levels = {}
+
+    for i,name in ipairs(love.filesystem.getDirectoryItems("maps")) do
+
+        local filedata = love.filesystem.read("maps/" .. name)
+        local obj = json.decode(filedata)
+        self.levels[obj.index] = obj
+
+    end
 
     self.startx  = 50
     self.starty  = 200
@@ -100,11 +105,11 @@ function LevelSelect:draw()
             love.graphics.rectangle("line", x, self.starty, self.width, self.height)
         end
 
-        love.graphics.setColor(1, 1, 1)
+        love.graphics.setColor(10, 10, 10)
         love.graphics.rectangle("fill", x + self.padding, self.starty + self.padding, self.width - self.padding * 2, self.height * 0.6)
 
         love.graphics.setColor(170, 210, 240)
-        love.graphics.printf(v[1], x + self.padding, self.starty + self.height - 50, self.width - self.padding * 2, "center")
+        love.graphics.printf(v.name, x + self.padding, self.starty + self.height - 50, self.width - self.padding * 2, "center")
 
 
         x = x + self.width + self.margin
@@ -115,8 +120,8 @@ function LevelSelect:draw()
     if self.active > 0 then
 
         love.graphics.setColor(250, 250, 250)
-        love.graphics.printf(self.levels[self.active][1], self.startx, self.starty + self.height + self.margin * 2, 200)
-        love.graphics.printf(self.levels[self.active][3], self.startx, self.starty + self.height + self.margin * 2 + 30, window_width * 0.7)
+        love.graphics.printf(self.levels[self.active].name,        self.startx, self.starty + self.height + self.margin * 2, 200)
+        love.graphics.printf(self.levels[self.active].description, self.startx, self.starty + self.height + self.margin * 2 + 30, window_width * 0.7)
 
     end
 
@@ -127,7 +132,7 @@ function LevelSelect:mousePressed(mousex, mousey, button)
     if self.hoveringPlay then
 
         ember.setScreen("game")
-        ember.screens.game:loadMap(self.levels[self.active][2])
+        ember.screens.game:loadMap(self.levels[self.active])
 
     else
         self.active = self.hover

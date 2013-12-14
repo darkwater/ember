@@ -24,17 +24,14 @@ function Map:draw()
 
 end
 
-function Map:loadFile(name)
+function Map:loadData(obj)
 
-    local filedata = love.filesystem.read(name)
-    local mapobj = json.decode(filedata)
-
-    self.name        = mapobj.name or "- none -"
-    self.description = mapobj.description or "- none -"
+    self.name        = obj.name or "- none -"
+    self.description = obj.description or "- none -"
 
 
     self.mapdata = {}
-    for y, row in ipairs(mapobj.mapdata) do
+    for y, row in ipairs(obj.mapdata) do
 
         local targetRow = {}
 
@@ -50,10 +47,18 @@ function Map:loadFile(name)
 
 
     self.paths = {}
-    for i, path in ipairs(mapobj.mapdata) do
+    for i, path in ipairs(obj.mapdata) do
 
         table.insert(self.paths, path)
 
     end
+
+end
+
+function Map:loadFile(name)
+
+    local filedata = love.filesystem.read(name)
+    local obj = json.decode(filedata)
+    self:loadData(obj)
 
 end
