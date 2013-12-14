@@ -27,8 +27,13 @@ function ButtonList:update(dt)
     local mousex, mousey = love.mouse.getPosition()
 
     self.hover = 0
-    if mousex > self.x and mousey > self.y and mousex < self.x + self.width and mousey < self.y + self.buttonHeight * #self.buttons + self.spacing * (#self.buttons - 1) and (mousey - self.y) % (self.buttonHeight + self.spacing) < self.buttonHeight then
+    if mousex > self.x and mousey > self.y
+        and mousex < self.x + self.width
+        and mousey < self.y + self.buttonHeight * #self.buttons + self.spacing * (#self.buttons - 1)
+        and (mousey - self.y) % (self.buttonHeight + self.spacing) < self.buttonHeight then
+
         self.hover = math.floor((mousey - self.y) / (self.buttonHeight + self.spacing)) + 1
+        
     end
 
 end

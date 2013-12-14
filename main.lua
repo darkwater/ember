@@ -1,7 +1,10 @@
+math.tau = math.pi * 2 -- hehe
+
 function love.load()
 
     class = require("middleclass")
 
+    require("util")
     require("main-menu")
     require("about")
     require("options")
@@ -9,6 +12,7 @@ function love.load()
     require("button-list")
     require("map")
     require("tile")
+    require("bullet")
     require("enemy")
     require("player")
     require("dashboard")
@@ -32,15 +36,17 @@ function love.load()
     ember.screens.levelselect = LevelSelect:new()
     ember.screens.game        = Game:new()
 
+    game = ember.screens.game -- shortcut :v
+
     function ember.setScreen(screen)
         ember.currentScreen = screen
     end
 
 end
 
-function love.update()
+function love.update(dt)
 
-    ember.screens[ember.currentScreen]:update()
+    ember.screens[ember.currentScreen]:update(dt)
 
 end
 

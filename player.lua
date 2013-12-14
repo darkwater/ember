@@ -6,17 +6,46 @@ function Player:initialize()
 
     self.image = Player.image
 
-    self.x = 100
-    self.y = 100
+    self.x     = 100
+    self.y     = 100
+    self.ang   = 0
+    self.speed = 150
 
 end
 
 function Player:update(dt)
 
+    local dirx = (love.keyboard.isDown("a") and -1 or 0) + (love.keyboard.isDown("d") and 1 or 0)
+    local diry = (love.keyboard.isDown("w") and -1 or 0) + (love.keyboard.isDown("s") and 1 or 0)
+
+    if dirx ~= 0 or diry ~= 0 then
+
+        local ang = math.atan2(diry, dirx)
+
+        if self.ang < ang - math.pi then self.ang = self.ang + math.tau end
+        if self.ang > ang + math.pi then self.ang = self.ang - math.tau end
+
+        self.ang = self.ang + (ang - self.ang) / 2
+
+        self.x = self.x + math.cos(self.ang) * self.speed * dt
+        self.y = self.y + math.sin(self.ang) * self.speed * dt
+
+    end
+
+    if love.mouse.isDown("l") then
+
+        local dx = love.mouse.getX() - self.x
+        local dy = love.mouse.getY() - self.y
+        local ang = math.atan2(dy, dx)
+
+        game:newBullet(self.x, self.y, ang, 500, "player")
+
+    end
+
 end
 
 function Player:draw()
 
-    love.graphics.draw(self.image, self.x, self.y)
+    love.graphics.draw(self.image, self.x - 12, self.y - 12)
 
 end

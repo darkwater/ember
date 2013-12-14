@@ -47,7 +47,7 @@ function Map:loadData(obj)
 
 
     self.paths = {}
-    for i, path in ipairs(obj.mapdata) do
+    for i, path in ipairs(obj.paths) do
 
         table.insert(self.paths, path)
 
