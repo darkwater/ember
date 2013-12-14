@@ -2,7 +2,9 @@ Enemy = class("Enemy")
 
 Enemy.image = love.graphics.newImage("img/enemy.png")
 
-function Enemy:initialize(path, speed)
+function Enemy:initialize(e_index, path, speed)
+
+    self.e_index = e_index
 
     self.image = Enemy.image
 
@@ -14,6 +16,10 @@ function Enemy:initialize(path, speed)
     self.path = path
     self.nextTarget = 2
     self.speed = speed
+
+    self.maxHealth = 10
+    self.health    = 10
+    self.size      = 12
 
 end
 
@@ -43,5 +49,23 @@ function Enemy:draw()
 
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.image, self.x - 12, self.y - 12)
+
+end
+
+function Enemy:damage(hp)
+
+    self.health = self.health - hp
+
+    if self.health <= 0 then
+
+        self:destroy()
+
+    end
+
+end
+
+function Enemy:destroy()
+
+    game:removeEnemy(self.e_index)
 
 end

@@ -28,15 +28,15 @@ function Game:update(dt)
 
     if math.floor(self.time / self.spawnRate) > math.floor((self.time - dt) / self.spawnRate) then
 
-        table.insert(self.enemies, Enemy:new(self.map.paths[1], math.random(50, 500)))
+        self:newEnemy(self.map.paths[1], math.random(80, 120))
 
     end
 
-    for i,v in ipairs(self.enemies) do
+    for k,v in pairs(self.enemies) do
         v:update(dt)
     end
 
-    for i,v in ipairs(self.bullets) do
+    for k,v in pairs(self.bullets) do
         v:update(dt)
     end
 
@@ -52,11 +52,11 @@ function Game:draw()
         self.map:draw()
         self.player:draw()
 
-        for i,v in ipairs(self.enemies) do
+        for k,v in pairs(self.enemies) do
             v:draw()
         end
 
-        for i,v in ipairs(self.bullets) do
+        for k,v in pairs(self.bullets) do
             v:draw()
         end
 
@@ -92,5 +92,25 @@ function Game:newBullet(...)
     local i = #self.bullets + 1
     local bullet = Bullet:new(i, ...)
     self.bullets[i] = bullet
+
+end
+
+function Game:removeBullet(i)
+
+    self.bullets[i] = nil
+
+end
+
+function Game:newEnemy(...)
+
+    local i = #self.enemies + 1
+    local enemy = Enemy:new(i, ...)
+    self.enemies[i] = enemy
+
+end
+
+function Game:removeEnemy(i)
+
+    self.enemies[i] = nil
 
 end

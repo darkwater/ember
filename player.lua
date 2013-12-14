@@ -11,6 +11,9 @@ function Player:initialize()
     self.ang   = 0
     self.speed = 150
 
+    self.nextFire  = 0
+    self.fireDelay = 0.1
+
 end
 
 function Player:update(dt)
@@ -32,13 +35,15 @@ function Player:update(dt)
 
     end
 
-    if love.mouse.isDown("l") then
+    if love.mouse.isDown("l") and self.nextFire < game.time then
 
         local dx = love.mouse.getX() - self.x
         local dy = love.mouse.getY() - self.y
         local ang = math.atan2(dy, dx)
 
-        game:newBullet(self.x, self.y, ang, 500, "player")
+        game:newBullet(self.x, self.y, ang, 500, 2, "player")
+
+        self.nextFire = game.time + self.fireDelay
 
     end
 
