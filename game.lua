@@ -3,33 +3,40 @@ Game = class("Game")
 function Game:initialize()
 
     self.map = Map:new()
+    self.player = Player:new()
+    self.dashboard = Dashboard:new()
+
+    self.enemy = Enemy:new()
 
 end
 
 function Game:update(dt)
 
-    local window_width  = love.window.getWidth()
-    local window_height = love.window.getHeight()
-
+    local window_width, window_height = love.window.getDimensions()
     local mousex, mousey = love.mouse.getPosition()
 
-
-
+    self.dashboard:update()
 
 end
 
 function Game:draw()
 
-    local window_width  = love.window.getWidth()
-    local window_height = love.window.getHeight()
+    local window_width, window_height = love.window.getDimensions()
 
-    self.map:draw()
+    love.graphics.setScissor(0, 0, window_width, window_height - 120)
+        self.map:draw()
+        self.player:draw()
+    love.graphics.setScissor()
+
+    self.dashboard:draw()
+
+    self.enemy:draw()
 
 end
 
-function Game:mousePressed(mousex, mousey, button)
+function Game:mousePressed(x, y, button)
 
-
+    self.dashboard:mousePressed(x, y, button)
 
 end
 

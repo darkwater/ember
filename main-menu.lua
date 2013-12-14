@@ -15,9 +15,7 @@ end
 
 function MainMenu:update(dt)
 
-    local window_width  = love.window.getWidth()
-    local window_height = love.window.getHeight()
-
+    local window_width, window_height = love.window.getDimensions()
     local mousex, mousey  = love.mouse.getPosition()
 
     if mousey > window_height - 120 then
@@ -34,8 +32,7 @@ end
 
 function MainMenu:draw()
 
-    local window_width  = love.window.getWidth()
-    local window_height = love.window.getHeight()
+    local window_width, window_height = love.window.getDimensions()
 
     love.graphics.setFont(ember.fonts[48])
     love.graphics.setColor(250, 250, 250)

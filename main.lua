@@ -6,8 +6,12 @@ function love.load()
     require("about")
     require("options")
     require("levelselect")
+    require("button-list")
     require("map")
     require("tile")
+    require("enemy")
+    require("player")
+    require("dashboard")
     require("game")
     require("json")
 
@@ -43,6 +47,8 @@ end
 function love.draw()
 
     ember.screens[ember.currentScreen]:draw()
+
+    -- love.graphics.print(love.timer.getFPS(), 10, 10)
 
 end
 

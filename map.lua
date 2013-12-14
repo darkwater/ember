@@ -6,10 +6,13 @@ function Map:initialize()
     self.name        = "No map loaded"
     self.description = "uhm wat"
     self.mapdata     = {}
+    self.paths       = {}
 
 end
 
 function Map:draw()
+
+    love.graphics.setColor(255, 255, 255)
 
     for y, row in ipairs(self.mapdata) do
         for x, tile in ipairs(row) do
@@ -26,8 +29,9 @@ function Map:loadFile(name)
     local filedata = love.filesystem.read(name)
     local mapobj = json.decode(filedata)
 
-    self.name        = mapobj.name
-    self.description = mapobj.description
+    self.name        = mapobj.name or "- none -"
+    self.description = mapobj.description or "- none -"
+
 
     self.mapdata = {}
     for y, row in ipairs(mapobj.mapdata) do
@@ -41,6 +45,14 @@ function Map:loadFile(name)
         end
 
         table.insert(self.mapdata, targetRow)
+
+    end
+
+
+    self.paths = {}
+    for i, path in ipairs(mapobj.mapdata) do
+
+        table.insert(self.paths, path)
 
     end
 
