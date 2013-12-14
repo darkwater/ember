@@ -5,6 +5,7 @@ function love.load()
     require("main-menu")
     require("about")
     require("options")
+    require("levelselect")
 
     love.graphics.setBackgroundColor(30, 30, 30)
 
@@ -17,9 +18,10 @@ function love.load()
     ember.fonts[48] = love.graphics.newFont("fonts/DroidSans.ttf", 48)
 
     ember.screens = {}
-    ember.screens.mainmenu = MainMenu:new()
-    ember.screens.about    = About:new()
-    ember.screens.options  = Options:new()
+    ember.screens.mainmenu    = MainMenu:new()
+    ember.screens.about       = About:new()
+    ember.screens.options     = Options:new()
+    ember.screens.levelselect = LevelSelect:new()
 
     function ember.setScreen(screen)
         ember.currentScreen = screen
