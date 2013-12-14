@@ -4,13 +4,12 @@ function LevelSelect:initialize()
 
     self.hover = 0
     self.active = 0
+    self.hoveringPlay = false
     self.hoveringBack = false
 
     self.levels =
     {
-        { "Intro",    "intro",   [[ A nice beginners map to get you started. A nice beginners map to get you started. A nice beginners map to get you started. A nice beginners map to get you started. ]] },
-        { "Intro",    "intro",   [[ A nice beginners map to get you started. A nice beginners map to get you started. A nice beginners map to get you started. ]] },
-        { "Intro",    "intro",   [[ A nice beginners map to get you started. ]] },
+        { "Intro",    "intro",   [[ A nice beginners map to get you started. ]] }
     }
 
     self.startx  = 50
@@ -51,7 +50,8 @@ function LevelSelect:update(dt)
     end
 
 
-    self.hoveringBack = mousey > window_height - 80 and mousex > window_width - 200
+    self.hoveringBack = mousey > window_height - 60 and mousex > window_width - 200
+    self.hoveringPlay = self.active > 0 and not self.hoveringBack and mousey > window_height - 140 and mousex > window_width - 200
 
 end
 
@@ -68,11 +68,18 @@ function LevelSelect:draw()
     love.graphics.setColor(250, 250, 250)
     love.graphics.printf("Select Level", 0, 110, window_width, "center")
 
-    local color = self.hoveringBack and 255 or 150
     love.graphics.setFont(ember.fonts[18])
+
+    local color = self.active > 0 and (self.hoveringPlay and 255 or 150) or 50
+    love.graphics.setColor(color, color, color)
+    love.graphics.printf("Play", 0, window_height - 100, window_width - 40, "right")
+
+    local color = self.hoveringBack and 255 or 150
     love.graphics.setColor(color, color, color)
     love.graphics.printf("Back", 0, window_height - 50, window_width - 40, "right")
 
+
+    love.graphics.setFont(ember.fonts[18])
 
     local x = self.startx
     for i,v in ipairs(self.levels) do
@@ -117,9 +124,14 @@ end
 
 function LevelSelect:mousePressed(mousex, mousey, button)
 
-    -- if self.hover > 0 then
+    if self.hoveringPlay then
+
+        ember.setScreen("game")
+        ember.screens.game:loadMap(self.levels[self.active][2])
+
+    else
         self.active = self.hover
-    -- end
+    end
 
     if self.hoveringBack then
         ember.setScreen("mainmenu")

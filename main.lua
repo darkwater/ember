@@ -6,6 +6,10 @@ function love.load()
     require("about")
     require("options")
     require("levelselect")
+    require("map")
+    require("tile")
+    require("game")
+    require("json")
 
     love.graphics.setBackgroundColor(30, 30, 30)
 
@@ -22,6 +26,7 @@ function love.load()
     ember.screens.about       = About:new()
     ember.screens.options     = Options:new()
     ember.screens.levelselect = LevelSelect:new()
+    ember.screens.game        = Game:new()
 
     function ember.setScreen(screen)
         ember.currentScreen = screen
