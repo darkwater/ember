@@ -1,0 +1,54 @@
+function love.load()
+
+    class = require("middleclass")
+
+    require("main-menu")
+    require("about")
+    require("options")
+
+    love.graphics.setBackgroundColor(30, 30, 30)
+
+    ember = {}
+    ember.currentScreen = "mainmenu"
+
+    ember.fonts = {}
+    ember.fonts[18] = love.graphics.newFont("fonts/DroidSans.ttf", 18)
+    ember.fonts[24] = love.graphics.newFont("fonts/DroidSans.ttf", 24)
+    ember.fonts[48] = love.graphics.newFont("fonts/DroidSans.ttf", 48)
+
+    ember.screens = {}
+    ember.screens.mainmenu = MainMenu:new()
+    ember.screens.about    = About:new()
+    ember.screens.options  = Options:new()
+
+    function ember.setScreen(screen)
+        ember.currentScreen = screen
+    end
+
+end
+
+function love.update()
+
+    ember.screens[ember.currentScreen]:update()
+
+end
+
+function love.draw()
+
+    ember.screens[ember.currentScreen]:draw()
+
+end
+
+function love.keypressed(key, isRepeat)
+
+    if key == "escape" then
+        love.event.quit()
+    end
+
+end
+
+function love.mousepressed(x, y, button)
+
+    ember.screens[ember.currentScreen]:mousePressed(x, y, button)
+
+end
