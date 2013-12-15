@@ -8,7 +8,7 @@ function MainMenu:initialize()
     {
         {"About",   "about"},
         {"Play",    "levelselect"},
-        {"Options", "options"},
+        {"Exit",    "exit"},
     }
 
 end

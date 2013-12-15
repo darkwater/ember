@@ -84,8 +84,6 @@ function LevelSelect:draw()
     love.graphics.printf("Back", 0, window_height - 50, window_width - 40, "right")
 
 
-    love.graphics.setFont(ember.fonts[18])
-
     local x = self.startx
     for i,v in ipairs(self.levels) do
 
@@ -94,6 +92,7 @@ function LevelSelect:draw()
 
         love.graphics.setColor(27, 27, 27)
         love.graphics.rectangle("fill", x - self.margin * 0.3, self.starty - self.margin * 0.3, self.width + self.margin * 0.6, self.height + self.margin * 0.9)
+
 
         love.graphics.setColor(active and 40 or 29,
                                hovering and 43 or 31,
@@ -105,11 +104,47 @@ function LevelSelect:draw()
             love.graphics.rectangle("line", x, self.starty, self.width, self.height)
         end
 
+
+        local px, py = x + self.padding,  self.starty + self.padding
+        local pw, ph = self.width - self.padding * 2,  self.height * 0.6
+
         love.graphics.setColor(10, 10, 10)
-        love.graphics.rectangle("fill", x + self.padding, self.starty + self.padding, self.width - self.padding * 2, self.height * 0.6)
+        love.graphics.rectangle("fill", px, py, pw, ph)
+
+        love.graphics.setScissor(px, py, pw, ph)
+
+            love.graphics.setColor(50, 90, 180)
+            love.graphics.setLineWidth(2)
+            for n, path in ipairs(v.paths) do
+
+                local line = {}
+
+                for _,c in ipairs(path) do
+
+                    table.insert(line, math.floor(c[1] / 25 * pw + px  +.5))
+                    table.insert(line, math.floor(c[2] / 15 * ph + py  +.5))
+
+                end
+
+                love.graphics.line(line)
+
+            end
+
+        love.graphics.setScissor()
+
+        love.graphics.setFont(ember.fonts[18])
 
         love.graphics.setColor(170, 210, 240)
         love.graphics.printf(v.name, x + self.padding, self.starty + self.height - 50, self.width - self.padding * 2, "center")
+
+        if ember.save.records and ember.save.records[v.name] then
+
+            love.graphics.setFont(ember.fonts[14])
+
+            love.graphics.setColor(170, 210, 240)
+            love.graphics.printf("Record: " .. ember.save.records[v.name], x + self.padding, self.starty + self.height - 27, self.width - self.padding * 2, "center")
+
+        end
 
 
         x = x + self.width + self.margin

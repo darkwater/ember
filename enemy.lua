@@ -30,7 +30,7 @@ function Enemy:update(dt)
     if self.ang < targetAng - math.pi then self.ang = self.ang + math.tau end
     if self.ang > targetAng + math.pi then self.ang = self.ang - math.tau end
 
-    self.ang = self.ang + (targetAng - self.ang) / 5
+    self.ang = self.ang + (targetAng - self.ang) / (300 * dt)
 
 
     self.x = self.x + math.cos(self.ang) * self.speed * dt
@@ -38,8 +38,18 @@ function Enemy:update(dt)
 
 
     local distance = math.sqrt((self.x - util.gridToPosition(target[1])) ^ 2 + (self.y - util.gridToPosition(target[2])) ^ 2)
-    if distance < self.speed * 0.1 and self.path[self.nextTarget + 1] then
-        self.nextTarget = self.nextTarget + 1
+    if distance < self.speed * 0.1 then
+
+        if self.path[self.nextTarget + 1] then
+
+            self.nextTarget = self.nextTarget + 1
+
+        else
+
+            game:over(self.x, self.y)
+
+        end
+
     end
 
 end
@@ -61,10 +71,12 @@ function Enemy:draw()
     local x, y = self.x, self.y
 
     for i = 0, math.ceil(self.health / self.maxHealth * 36) do
+
         local theta = i * 10 / 180 * math.pi
 
         table.insert(vertices, x + math.cos(theta) * (self.size + 5))
         table.insert(vertices, y + math.sin(theta) * (self.size + 5))
+        
     end
 
     if #vertices > 3 then
@@ -88,8 +100,6 @@ end
 function Enemy:destroy()
 
     game:removeEnemy(self.e_index)
-    game.money = game.money + self.prize
-
-    game:cashSign(self.prize, self.x, self.y)
+    game:giveCash(self.prize, self.x, self.y)
 
 end

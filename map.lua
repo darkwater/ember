@@ -7,7 +7,6 @@ function Map:initialize()
     self.description = "uhm wat"
     self.mapdata     = {}
     self.paths       = {}
-    self.enemies     = {}
     self.waves       = {}
 
 end
@@ -48,7 +47,7 @@ function Map:loadData(obj)
     end
 
 
-    for _,v in ipairs({"paths", "enemies"}) do
+    for _,v in ipairs({"paths"}) do
 
         self[v] = {}
         for i, item in ipairs(obj[v]) do

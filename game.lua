@@ -16,6 +16,9 @@ function Game:initialize()
     self.difficulty = 1
 
     self.time = 0
+    self.overtime = 0
+    self.isOver = false
+    self.result = {}
 
     self.money = 200
 
@@ -30,9 +33,24 @@ function Game:update(dt)
 
     self.dashboard:update(dt)
 
-    self.player:update(dt)
+    if self.isOver then
 
-    if self.nextSpawn <= self.time then
+        self.overtime = self.overtime + dt
+
+        if self.overtime >= 2.5 then
+
+            ember.screens.gameover:start(self.result)
+            ember.setScreen("gameover")
+
+        end
+
+    else
+
+        self.player:update(dt)
+
+    end
+
+    if self.nextSpawn <= self.time and not self.isOver then
 
         local enemyType = ({ "scout", "soldier", "hoovy" })[math.random(1, 3)]
         local boss = math.random(1, 30) == 1
@@ -149,6 +167,32 @@ function Game:draw()
 
     self.dashboard:draw()
 
+
+    if self.isOver then
+
+        local x, y = self.result.endx, self.result.endy
+
+        love.graphics.setColor(255, 255, 255, math.min(255, self.overtime * 220))
+        love.graphics.circle("fill", x, y, self.overtime * 300, 50)
+
+        love.graphics.setColor(255, 255, 255, 150)
+        for i = 1, 3 do
+
+            local At = (i * 2) / 6 * math.tau + self.overtime * math.tau
+            local Bt = At + game.overtime * 1.2
+
+            local Ax, Ay = math.cos(At) * 1000 + x, math.sin(At) * 1000 + y
+            local Bx, By = math.cos(Bt) * 1000 + x, math.sin(Bt) * 1000 + y
+
+            love.graphics.polygon("fill", x, y, Ax, Ay, Bx, By)
+
+        end
+
+        love.graphics.setColor(255, 255, 255, math.min(255, self.overtime * 150))
+        love.graphics.rectangle("fill", 0, 0, window_width, window_height)
+
+    end
+
 end
 
 function Game:mousePressed(x, y, button)
@@ -167,8 +211,12 @@ function Game:loadMap(obj)
     self.bullets = {}
     self.towers  = {}
 
-    self.time = 0
-    self.money = 200
+    self.time        = 0
+    self.nextSpawn   = 10
+    self.money       = 200
+    self.moneyEarned = 0
+    self.isOver      = false
+    self.overtime    = 0
 
     if type(obj) == "string" then
 
@@ -182,9 +230,30 @@ function Game:loadMap(obj)
 
 end
 
-function Game:cashSign(cash, x, y)
+function Game:giveCash(cash, x, y)
 
-    table.insert(self.cashSigns, { cash, x - 50, y - 15, 255 })
+    if self.isOver then return false end
+
+    self.money = self.money + cash
+    self.moneyEarned = self.moneyEarned + cash
+    table.insert(self.cashSigns, { math.floor(cash), x - 50, y - 15, 255 })
+
+end
+
+function Game:over(x, y)
+
+    if self.isOver then return false end
+
+    self.result = {
+        points = math.floor(self.moneyEarned),
+        difficulty = math.floor(self.difficulty),
+        time = self.time,
+        endx = x,
+        endy = y,
+        map = self.map.name
+    }
+
+    self.isOver = true
 
 end
 

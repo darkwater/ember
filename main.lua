@@ -4,21 +4,22 @@ function love.load()
 
     class = require("middleclass")
 
-    require("util")
-    require("main-menu")
     require("about")
-    require("options")
-    require("level-select")
-    require("button-list")
-    require("map")
-    require("tile")
     require("bullet")
-    require("tower")
-    require("enemy")
-    require("player")
+    require("button-list")
     require("dashboard")
+    require("enemy")
     require("game")
+    require("gameover")
     require("json")
+    require("level-select")
+    require("main-menu")
+    require("map")
+    require("options")
+    require("player")
+    require("tile")
+    require("tower")
+    require("util")
 
     love.graphics.setBackgroundColor(30, 30, 30)
 
@@ -37,18 +38,39 @@ function love.load()
     ember.screens.options     = Options:new()
     ember.screens.levelselect = LevelSelect:new()
     ember.screens.game        = Game:new()
+    ember.screens.gameover    = Gameover:new()
 
     game = ember.screens.game -- shortcut :v
 
+    if not love.filesystem.exists("save.json") then
+
+        ember.save = {}
+        ember.currentScreen = "about"
+        ember.screens.about.firstTime = true
+
+    else
+
+        local file = love.filesystem.read("save.json")
+        ember.save = json.decode(file)
+
+    end
+
     function ember.setScreen(screen)
-        ember.currentScreen = screen
+
+        if screen == "exit" then
+            love.event.quit()
+        else
+            ember.screens.about.firstTime = false
+            ember.currentScreen = screen
+        end
+
     end
 
 end
 
 function love.update(dt)
 
-    if love.mouse.isDown("r") then dt = dt / 2 end
+    if love.mouse.isDown("r") then dt = dt / 3 end
 
     ember.screens[ember.currentScreen]:update(dt)
 
@@ -65,12 +87,14 @@ end
 function love.keypressed(key, isRepeat)
 
     if key == "escape" then
-        love.event.quit()
+        -- love.event.quit()
     end
 
 end
 
 function love.mousepressed(x, y, button)
+
+    if button == "m" then game:over(x, y) end
 
     ember.screens[ember.currentScreen]:mousePressed(x, y, button)
 
@@ -79,5 +103,12 @@ end
 function love.resize(width, height)
 
     game.dashboard:updatePanel(width, height)
+
+end
+
+function love.quit()
+
+    local data = json.encode(ember.save)
+    love.filesystem.write("save.json", data)
 
 end
