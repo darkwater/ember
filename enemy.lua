@@ -49,8 +49,30 @@ end
 
 function Enemy:draw()
 
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(self.image, self.x - 12, self.y - 12)
+    love.graphics.setColor(254, 141, 92)
+    love.graphics.circle("fill", self.x, self.y, self.size - 1, 30)
+
+    love.graphics.setColor(54, 54, 54)
+    love.graphics.setLineWidth(1)
+    love.graphics.circle("line", self.x, self.y, self.size, 30)
+
+
+    love.graphics.setColor(10, 100, 0, 160)
+    love.graphics.setLineWidth(2)
+
+    local vertices = {}
+    local x, y = self.x, self.y
+
+    for i = 0, math.ceil(self.health / self.maxHealth * 36) do
+        local theta = i * 10 / 180 * math.pi
+
+        table.insert(vertices, x + math.cos(theta) * (self.size + 5))
+        table.insert(vertices, y + math.sin(theta) * (self.size + 5))
+    end
+
+    if #vertices > 3 then
+        love.graphics.line(unpack(vertices))
+    end
 
 end
 
