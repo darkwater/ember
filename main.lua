@@ -75,3 +75,9 @@ function love.mousepressed(x, y, button)
     ember.screens[ember.currentScreen]:mousePressed(x, y, button)
 
 end
+
+function love.resize(width, height)
+
+    game.dashboard:updatePanel(width, height)
+
+end

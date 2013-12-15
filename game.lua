@@ -6,11 +6,12 @@ function Game:initialize()
     self.player    = Player:new()
     self.dashboard = Dashboard:new()
 
-    self.enemies = {}
-    self.bullets = {}
-    self.towers  = {}
+    self.enemies   = {}
+    self.bullets   = {}
+    self.towers    = {}
+    self.cashSigns = {}
 
-    self.nextSpawn = 20
+    self.nextSpawn = 10
     self.spawnRate = 2
     self.difficulty = 1
 
@@ -31,18 +32,59 @@ function Game:update(dt)
 
     self.player:update(dt)
 
-    if self.nextSpawn <= game.time then
+    if self.nextSpawn <= self.time then
 
-        local enemy = self.map.enemies[math.random(1, #self.map.enemies)]
+        local enemyType = ({ "scout", "soldier", "hoovy" })[math.random(1, 3)]
+        local boss = math.random(1, 30) == 1
 
-        local health = math.random(enemy.health[1], enemy.health[2])
-        local speed  = math.random(enemy.speed[1], enemy.speed[2])
-        local size   = math.random(enemy.size[1], enemy.size[2])
-        local prize  = math.random(enemy.prize[1], enemy.prize[2])
+        local color, health, speed, size = nil
 
-        self:newEnemy(self.map.paths[math.random(1, #self.map.paths)], health, speed, size, prize, enemy.color)
+        if enemyType == "scout" then        color  = {  20,  50, 220 }
+                                            health = math.random(   1 + self.difficulty *  0.5,   2 + self.difficulty *  0.7)
+                                            speed  = math.random( 150 + self.difficulty *  8.0, 190 + self.difficulty * 11.0)
+                                            size   = math.random(  11 - self.difficulty *  0.4,  12 - self.difficulty *  0.3)
 
-        self.nextSpawn = game.time + self.spawnRate
+        elseif enemyType == "soldier" then  color  = {  60, 210,  60 }
+                                            health = math.random(  10 + self.difficulty *  0.8,  16 + self.difficulty *  1.3)
+                                            speed  = math.random(  80 + self.difficulty *  5.0, 100 + self.difficulty * 10.0)
+                                            size   = math.random(  11 + self.difficulty *  0.1,  12 + self.difficulty *  0.2)
+
+        elseif enemyType == "hoovy" then    color  = { 200,  80,  40 }
+                                            health = math.random(  15 + self.difficulty *  1.1,  20 + self.difficulty *  2.2)
+                                            speed  = math.random(  50 + self.difficulty *  4.0,  70 + self.difficulty *  6.0)
+                                            size   = math.random(  12 + self.difficulty *  0.2,  14 + self.difficulty *  0.5)
+        end
+
+        if boss then               health = health * math.random( 700 + self.difficulty *  1.4, 900 + self.difficulty *  1.8) / 100
+                                   speed  = speed  * math.random(  40 + self.difficulty *  0.4,  70 + self.difficulty *  0.6) / 100
+                                   size   = size   * math.random( 130 + self.difficulty *  0.2, 170 + self.difficulty *  0.3) / 100
+        end
+
+        prize  = math.floor(health * 1.0 + speed * 0.1 - size * 0.2)
+
+        if boss then prize = prize * math.random(14, 17) / 10 end
+
+
+        local limits =
+        {
+            health = {  1, 20000 },
+            speed  = { 30,   421 }, -- don't blaze it fagets
+            size   = {  4,    16 },
+            prize  = { 10, 50000 }
+        }
+
+        health = math.max( limits.health[1], math.min( limits.health[2], health ))
+        speed  = math.max( limits.speed[1],  math.min( limits.speed[2],  speed  ))
+        size   = math.max( limits.size[1],   math.min( limits.size[2],   size   ))
+        prize  = math.max( limits.prize[1],  math.min( limits.prize[2],  prize  ))
+
+
+        self:newEnemy(self.map.paths[math.random(1, #self.map.paths)], health, speed, size, prize, color)
+
+        self.nextSpawn = self.time + (boss and math.random(12, 20) or self.spawnRate) -- small break after bosses
+
+        self.difficulty = self.difficulty + 0.03
+        self.spawnRate = self.spawnRate * 0.996 -- reaches 1s in about 365 spawns
 
     end
 
@@ -58,6 +100,19 @@ function Game:update(dt)
         v:update(dt)
     end
 
+    for k,v in pairs(self.cashSigns) do
+
+        v[3] = v[3] - dt * 30
+        v[4] = v[4] - dt * 180
+
+        if v[4] <= 0 then
+
+            table.remove(self.cashSigns, k)
+
+        end
+
+    end
+
 end
 
 function Game:draw()
@@ -68,18 +123,25 @@ function Game:draw()
     love.graphics.setScissor(0, 0, window_width, window_height - 120)
 
         self.map:draw()
+
+        for i,n in ipairs({"enemies", "towers", "bullets"}) do
+
+            for k,v in pairs(self[n]) do
+                v:draw()
+            end
+
+        end
+
         self.player:draw()
 
-        for k,v in pairs(self.enemies) do
-            v:draw()
-        end
 
-        for k,v in pairs(self.towers) do
-            v:draw()
-        end
+        love.graphics.setFont(ember.fonts[18])
 
-        for k,v in pairs(self.bullets) do
-            v:draw()
+        for k,v in pairs(self.cashSigns) do
+
+            love.graphics.setColor(100, 150, 10, v[4])
+            love.graphics.printf("$" .. v[1], v[2], v[3], 100, "center")
+
         end
 
     love.graphics.setScissor()
@@ -117,6 +179,12 @@ function Game:loadMap(obj)
         self.map:loadData(obj)
 
     end
+
+end
+
+function Game:cashSign(cash, x, y)
+
+    table.insert(self.cashSigns, { cash, x - 50, y - 15, 255 })
 
 end
 

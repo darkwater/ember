@@ -4,7 +4,7 @@ function Dashboard:initialize()
 
     local window_width, window_height = love.window.getDimensions()
 
-    self.optionList = ButtonList:new(window_width - 120, window_height - 40, 100, 25, 5, ember.fonts[18], "right")
+    self.optionList = ButtonList:new(window_width - 120, window_height - 110, 100, 25, 5, ember.fonts[18], "right")
     self.optionList:addButton("Menu", function ()
         ember.setScreen("mainmenu")
     end)
@@ -13,17 +13,24 @@ function Dashboard:initialize()
     self.tpanel = {}
     self.tpanel.hover = 0
     setmetatable(self.tpanel, { __index = _G })
+
+    self.placingTower = 0
+    self.placingValid = false
+
+    self:updatePanel(window_width, window_height)
+
+end
+
+function Dashboard:updatePanel(width, height)
+
     self.tpanel.left    = 10
-    self.tpanel.top     = window_height - 110
-    self.tpanel.width   = window_width / 2
+    self.tpanel.top     = height - 110
+    self.tpanel.width   = width / 2 - 30
     self.tpanel.height  = 100
     self.tpanel.right   = self.tpanel.left + self.tpanel.width
     self.tpanel.bottom  = self.tpanel.top + self.tpanel.height
     self.tpanel.padding = 5
     self.tpanel.spacing = 10
-
-    self.placingTower = 0
-    self.placingValid = false
 
 end
 
@@ -141,7 +148,17 @@ function Dashboard:draw()
     love.graphics.setFont(ember.fonts[18])
 
     love.graphics.setColor(90, 240, 80)
-    love.graphics.print("$" .. math.floor(game.money), window_width / 2 + 30, window_height - 110)
+    love.graphics.print("$" .. math.floor(game.money), window_width / 2, window_height - 110)
+
+    love.graphics.setColor(80, 190, 240)
+    love.graphics.print("Difficulty: " .. math.floor(game.difficulty), window_width / 2, window_height - 85)
+
+
+    local timeleft = (game.nextSpawn - game.time)
+    love.graphics.setColor(80, 240, 190)
+    love.graphics.setFont(ember.fonts[14])
+    love.graphics.print("Next spawn in " .. ((timeleft <= 2) and "..." or (math.ceil(timeleft) .. "s")), window_width / 2, window_height - 30)
+    love.graphics.rectangle("fill", window_width / 2, window_height - 8, timeleft / 15 * (window_width / 2), 2)
 
 
     self.optionList:draw()

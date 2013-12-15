@@ -90,4 +90,6 @@ function Enemy:destroy()
     game:removeEnemy(self.e_index)
     game.money = game.money + self.prize
 
+    game:cashSign(self.prize, self.x, self.y)
+
 end

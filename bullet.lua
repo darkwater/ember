@@ -21,6 +21,13 @@ function Bullet:update(dt)
     self.x = self.x + math.cos(self.ang) * self.speed * dt
     self.y = self.y + math.sin(self.ang) * self.speed * dt
 
+    if self.x < -100 or self.y < -100 or self.x > love.window.getWidth() + 100 or self.y > love.window.getHeight() + 100 then
+
+        self:destroy()
+        return
+
+    end
+
     local Bx, By = self.x, self.y
     local Mx, My = Ax*.5 + Bx*.5, Ay*.5 + By*.5
 
