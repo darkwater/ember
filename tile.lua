@@ -1,10 +1,10 @@
 Tile = class("Tile")
 
 Tile.types =
-{ --  nice name        image name       walkable  buildable  enemy path  target
-    { "Floor tile",    "plain_tile",    true,     true,      false,      false },
-    { "Enemy path",    "enemy_path",    true,     false,     true,       false },
-    { "Nuclear bomb",  "nuclear_bomb",  false,    false,     true,       true  },
+{ --  nice name        image name       walkable  buildable  enemy path  target   color
+    { "Floor tile",    "plain_tile",    true,     true,      false,      false,  { 210, 211, 212 } },
+    { "Enemy path",    "enemy_path",    true,     false,     true,       false,  { 180, 200, 230 } },
+    { "Nuclear bomb",  "nuclear_bomb",  false,    false,     true,       true,   { 210, 150,  20 } },
 }
 
 Tile.NICE_NAME  = 1
@@ -13,15 +13,9 @@ Tile.WALKABLE   = 3
 Tile.BUILDABLE  = 4
 Tile.ENEMY_PATH = 5
 Tile.TARGET     = 6
+Tile.COLOR      = 7
 
 Tile.SIZE = 32
-
-Tile.imageCache = {}
-for i,v in ipairs(Tile.types) do
-
-    Tile.imageCache[v[Tile.IMAGE_NAME]] = love.graphics.newImage("tiles/" .. v[Tile.IMAGE_NAME] .. ".png")
-
-end
 
 function Tile:initialize(type, x, y)
 
@@ -36,12 +30,11 @@ function Tile:initialize(type, x, y)
     self.enemyPath = Tile.types[type][Tile.ENEMY_PATH]
     self.target    = Tile.types[type][Tile.TARGET]
 
-    self.image = Tile.imageCache[self.imageName]
-
 end
 
 function Tile:draw()
 
-    love.graphics.draw(self.image, self.x, self.y)
+    love.graphics.setColor(Tile.types[self.type][Tile.COLOR])
+    love.graphics.rectangle("fill", self.x, self.y, Tile.SIZE, Tile.SIZE)
 
 end

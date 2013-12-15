@@ -1,12 +1,8 @@
 Enemy = class("Enemy")
 
-Enemy.image = love.graphics.newImage("img/enemy.png")
-
-function Enemy:initialize(e_index, path, speed)
+function Enemy:initialize(e_index, path, health, speed, size, prize, color)
 
     self.e_index = e_index
-
-    self.image = Enemy.image
 
     self.x = util.gridToPosition(path[1][1])
     self.y = util.gridToPosition(path[1][2])
@@ -15,13 +11,14 @@ function Enemy:initialize(e_index, path, speed)
 
     self.path = path
     self.nextTarget = 2
-    self.speed = speed
 
-    self.maxHealth = 18
-    self.health    = 18
-    self.size      = 12
+    self.health    = health
+    self.speed     = speed
+    self.size      = size
+    self.prize     = prize
+    self.color     = color
 
-    self.prize = speed / 5
+    self.maxHealth = health
 
 end
 
@@ -49,7 +46,7 @@ end
 
 function Enemy:draw()
 
-    love.graphics.setColor(254, 141, 92)
+    love.graphics.setColor(self.color)
     love.graphics.circle("fill", self.x, self.y, self.size - 1, 30)
 
     love.graphics.setColor(54, 54, 54)

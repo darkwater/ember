@@ -48,6 +48,8 @@ end
 
 function love.update(dt)
 
+    if love.mouse.isDown("r") then dt = dt / 2 end
+
     ember.screens[ember.currentScreen]:update(dt)
 
 end
