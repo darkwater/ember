@@ -14,4 +14,4 @@ good or the evil, all you know is that that bomb must stay safe.
 Ember is a game made by Darkwater using LÖVE (http://love2d.org) for the 28th
 Ludum Dare, following the theme "You Only Get One".
 
-For more information, o tohttp://novaember.com/ld/
+For more information, go tohttp://novaember.com/ld/
