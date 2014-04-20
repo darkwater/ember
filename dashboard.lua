@@ -4,12 +4,6 @@ function Dashboard:initialize()
 
     local window_width, window_height = love.window.getDimensions()
 
-    self.optionList = ButtonList:new(window_width - 120, window_height - 110, 100, 25, 5, ember.fonts[18], "right")
-    self.optionList:addButton("Menu", function ()
-        ember.setScreen("mainmenu")
-    end)
-
-
     self.tpanel = {}
     self.tpanel.hover = 0
     setmetatable(self.tpanel, { __index = _G })
@@ -31,7 +25,13 @@ function Dashboard:updatePanel(width, height)
     self.tpanel.bottom  = self.tpanel.top + self.tpanel.height
     self.tpanel.padding = 5
     self.tpanel.spacing = 10
-
+    
+    --update menu button position (also actually creates it when called first time)
+    self.optionList = ButtonList:new(width - 120, height - 110, 100, 25, 5, ember.fonts[18], "right")
+    self.optionList:addButton("Menu", function ()
+        ember.setScreen("mainmenu")
+    end)
+    
 end
 
 function Dashboard:update(dt)

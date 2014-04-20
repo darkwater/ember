@@ -47,8 +47,8 @@ function Player:update(dt)
 
     if love.mouse.isDown("l") and mousey < window_height - 120 and self.nextFire < game.time and self.energy > 0 then
 
-        local dx = mousex - self.x
-        local dy = mousey - self.y
+        local dx = mousex - self.x - ember.screens[ember.currentScreen].offset_x
+        local dy = mousey - self.y - ember.screens[ember.currentScreen].offset_y
         local ang = math.atan2(dy, dx)
 
         game:newBullet(self.x, self.y, ang, 550, 1.64, "player", { 30, 25, 20 })
