@@ -81,10 +81,12 @@ function Dashboard:draw()
     local window_width, window_height = love.window.getDimensions()
     local mousex, mousey = love.mouse.getPosition()
 
-
     if self.placingTower > 0 then
-
-        local x, y = math.floor(mousex / Tile.SIZE) * Tile.SIZE, math.floor(mousey / Tile.SIZE) * Tile.SIZE
+        love.graphics.push()
+        
+        love.graphics.translate(ember.screens[ember.currentScreen].offset_x, ember.screens[ember.currentScreen].offset_y)
+        
+        local x, y = math.floor((mousex - ember.screens[ember.currentScreen].offset_x) / Tile.SIZE) * Tile.SIZE, math.floor((mousey - ember.screens[ember.currentScreen].offset_y) / Tile.SIZE) * Tile.SIZE
 
         self.placingValid = math.sqrt((x - game.player.x) ^ 2 + (y - game.player.y) ^ 2) < game.player.buildRange
 
@@ -96,6 +98,7 @@ function Dashboard:draw()
 
         Tower.draw(self.placingTower, x, y, 150)
 
+        love.graphics.pop()
     end
 
 
@@ -194,8 +197,9 @@ function Dashboard:mousePressed(mousex, mousey, button)
             local cost = Tower.types[self.placingTower][Tower.COST]
 
             if cost <= game.money then
-
-                local x, y = math.floor(mousex / Tile.SIZE) * Tile.SIZE, math.floor(mousey / Tile.SIZE) * Tile.SIZE
+                
+                local x, y = math.floor((mousex - ember.screens[ember.currentScreen].offset_x) / Tile.SIZE) * Tile.SIZE, math.floor((mousey - ember.screens[ember.currentScreen].offset_y) / Tile.SIZE) * Tile.SIZE
+                --local x, y = math.floor(mousex / Tile.SIZE) * Tile.SIZE, math.floor(mousey / Tile.SIZE) * Tile.SIZE
 
                 game:newTower(self.placingTower, x, y)
 
