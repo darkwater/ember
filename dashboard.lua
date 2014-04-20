@@ -61,7 +61,19 @@ function Dashboard:update(dt)
         end
 
     end
-
+    
+    for k,v in pairs(Tower.types) do --hotkeys for tower placement
+        if love.keyboard.isDown(k) then
+            self.placingTower = k
+        end
+    end
+    
+    if self.placingTower ~= 0 then
+        if Tower.types[self.placingTower][Tower.COST] > game.money then
+            self.placingTower = 0
+        end
+    end
+    
 end
 
 function Dashboard:draw()
