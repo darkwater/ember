@@ -12,9 +12,12 @@ function Map:initialize()
 end
 
 function Map:draw()
-
-    love.graphics.setColor(255, 255, 255)
-
+    local window_width = love.window.getWidth()
+    local window_height = love.window.getHeight() - ember.screens[ember.currentScreen].dashboard.tpanel.height
+    
+    love.graphics.setColor(Tile.types[1][Tile.COLOR]) --fill the gameworld area with floor color
+    love.graphics.rectangle("fill", -ember.screens[ember.currentScreen].offset_x, -ember.screens[ember.currentScreen].offset_y, window_width, window_height)
+    
     for y, row in ipairs(self.mapdata) do
         for x, tile in ipairs(row) do
     
@@ -22,7 +25,6 @@ function Map:draw()
     
         end
     end
-
 end
 
 function Map:loadData(obj)

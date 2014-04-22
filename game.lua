@@ -1,7 +1,8 @@
 Game = class("Game")
 
 function Game:initialize()
-
+    
+    
     self.map       = Map:new()
     self.player    = Player:new()
     self.dashboard = Dashboard:new()
@@ -21,15 +22,24 @@ function Game:initialize()
     self.result = {}
 
     self.money = 200
+end
 
+function Game:updateOffsets(width, height)
+    local total_tiles_width = #self.map.mapdata[1] * Tile.SIZE
+    local total_tiles_height = #self.map.mapdata * Tile.SIZE
+    
+    self.offset_x = width/2 - total_tiles_width/2
+    --self.offset_y = height/2 - total_tiles_height/2 --can't be centered on y axis, that spoils the mob spawn
+    self.offset_y = 0
 end
 
 function Game:update(dt)
-
     self.time = self.time + dt
 
     local window_width, window_height = love.window.getDimensions()
     local mousex, mousey = love.mouse.getPosition()
+
+    self:updateOffsets(window_width, window_height)
 
     self.dashboard:update(dt)
 
@@ -137,6 +147,9 @@ function Game:draw()
 
     local window_width, window_height = love.window.getDimensions()
 
+    love.graphics.push()
+    
+    love.graphics.translate(self.offset_x, self.offset_y)
 
     love.graphics.setScissor(0, 0, window_width, window_height - 120)
 
@@ -164,10 +177,6 @@ function Game:draw()
 
     love.graphics.setScissor()
 
-
-    self.dashboard:draw()
-
-
     if self.isOver then
 
         local x, y = self.result.endx, self.result.endy
@@ -192,7 +201,12 @@ function Game:draw()
         love.graphics.rectangle("fill", 0, 0, window_width, window_height)
 
     end
-
+    
+    love.graphics.pop()
+    
+    if not self.isOver then
+        self.dashboard:draw()
+    end
 end
 
 function Game:mousePressed(x, y, button)
